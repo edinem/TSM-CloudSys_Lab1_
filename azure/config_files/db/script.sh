@@ -18,7 +18,7 @@ mysql_user_name='cloud_user'
 mysql_user_password='#Welcome123'
 mysql_root_password='#Welcome123'
 mysql_app_database='cloudapp'
-mysql_bind_address="13.81.253.241"
+mysql_bind_address="20.101.89.227"
 
 # Secure the database installation
 sudo /usr/bin/mysqladmin -u root password "$mysql_root_password"

@@ -74,6 +74,10 @@ def createNetworkSubnet():
     print(f"Provisioned virtual subnet {subnet_result.name} with address prefix {subnet_result.address_prefix}")
 
     
+def createSecurityGroup():
+    print("Defining security group")
+    
+
 
 
 def createVM(VMName, network_client, NIC, IPName) :
@@ -108,7 +112,10 @@ def createVM(VMName, network_client, NIC, IPName) :
                 "name": IP_CONFIG_NAME,
                 "subnet": { "id": subnet_result.id },
                 "public_ip_address": {"id": ip_address_result.id }
-            }]
+            }],
+            'network_security_group':{
+                'id' : 'securegroup1'
+            }
         }
     )
     nic_result = poller.result()
@@ -146,7 +153,16 @@ def createVM(VMName, network_client, NIC, IPName) :
             "os_profile": {
                 "computer_name": VM_NAME,
                 "admin_username": USERNAME,
-                "admin_password": PASSWORD
+                "admin_password": PASSWORD,
+                "linux_configuration": {
+                    "disable_password_authentication": True,
+                    "ssh": {
+                        "public_keys": [{
+                            "path": "/home/{}/.ssh/authorized_keys".format(USERNAME),
+                            "key_data": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCvBte4/FYjOOF9W2PMbbUNE1tyw1A/1WG/v2SZccoUD5hfPZo56vUs5G1059M6lrD+GleWhzfbDWeI3dN+HU/dCi/meNQCq9p6gvw1A4/PPkCZvsCTb+GGXCGrod5wOecPnNhvM09l9gd9lPqZ8b3vGgC5bclA5JgroR2GE32k4m+HJlVQFKmVD2bmgCAi7xxRo7DCBMiEhCDq0bYiajTFAMrPGqJLFQnGVmUT1mHiVO0YiRGLiNSSKUolzZDxKy4sM5b3NzaeoHJqalUNvGcBRRUHdxbdgP8P8lcq0nKSpzTbtZ5fY9DSDslAMCTJOt6p0I5WgfR/AK3wMG+eNayAaH80xB30j16emewPa2bT/0MUaXBMNrlVp2hf3bPJ/IdsAenA+9HfRHrVyAvOqb2vRcFuwVuhgJZbd3i7EKYYl3ijUOurbQRG8Xvv8T4gLogyd3P2f89eRtwaTDt6rAHXMK0MeQfQXog9rKzsFXjwhrBlNcwX24VKO4XD02KHtAE= azureuser"        
+                        }]
+                    }
+                }
             },
             "network_profile": {
                 "network_interfaces": [{
@@ -268,19 +284,18 @@ def main():
     global INSTANCE_IPS
 
     network_client = NetworkManagementClient(credential, subscription_id)
-    key = paramiko.RSAKey.from_private_key_file("./azureuser.pem")
+    key = paramiko.RSAKey.from_private_key_file("./azurelab.pem")
 
-    #createNetworkSubnet()
+    createNetworkSubnet()
 
-    #createDatabaseInstance(network_client)
-    #createBackendInstance(network_client)
-    #createFrontendInstance(network_client)
+    createDatabaseInstance(network_client)
+    createBackendInstance(network_client)
+    createFrontendInstance(network_client)
 
     print("Instances created successfully...")
     print("Waiting 60 secondes before starting the configuration...")
-    #time.sleep(60)
+    time.sleep(60)
 
-    INSTANCE_IPS = ['13.81.253.241', '13.73.140.135', '13.81.6.140']
     generateConfigScripts()
 
     configureDatabaseInstance()

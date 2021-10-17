@@ -5,9 +5,9 @@ sudo amazon-linux-extras install epel -y
 sudo yum install nginx -y
 # Download the reverse proxy configuration
 sudo /usr/bin/wget -O /etc/nginx/conf.d/proxy.conf https://raw.githubusercontent.com/sammcgeown/vRA-3-Tier-Application/master/config/proxy.nginx.conf
-web_server_name="13.81.6.140"
+web_server_name="13.95.19.125"
 
-app_server_name="13.73.140.135"
+app_server_name="13.93.104.255"
 
 sudo /usr/bin/sed -i "s@SERVERNAME@$web_server_name@" /etc/nginx/conf.d/proxy.conf
 sudo /usr/bin/sed -i "s@APPTIER@$app_server_name@" /etc/nginx/conf.d/proxy.conf
