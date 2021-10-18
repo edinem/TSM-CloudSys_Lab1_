@@ -55,13 +55,13 @@ sudo pip install -r requirements.txt
 2. Depuis le Google Cloud Engine bashboard il est nécessaire de créer un projet afin de se voir attribué un Id de projet.
 Plus de détail ici : [Google Cloud Engine bashboard](https://console.cloud.google.com/home/dashboard)
 
-3. De plus, il faut _impérativement_ changer la variable `project_id` avec l'ID de votre projet Google Cloud Engine disponible sur votre tableau de bord. Cette variable est diaponible dans le `main` du script `gce_script.py`
+3. De plus, il faut _impérativement_ changer les variable `project_id` et `username` avec l'ID de votre projet Google Cloud Engine disponible sur votre tableau de bord et le nom de votre compte google, le nom de compte est le String qui précéde le @ de votre compte. Cette variable est diaponible dans le `main` du script `gce_script.py`
 
-4. Afin de pouvoir se connecter en SSH au VM, il faut créer une clef SSH et la mettre sur Azure. Sur linux, la commande est : `ssh-keygen -t rsa -f ./cloud.pem -C [NomDuCompteGoogle]`. Le nom de compte est le String qui précéde le @ de votre compte. Le fichier utilisé pour stocker la clef privée est : `cloud.pem` et doit être présent dans le répertoire `/gce`. Il est nécessaire de renseigner la clef publique liée a cette clef privée sur votre compte Google.
+4. Afin de pouvoir se connecter en SSH au VM, il faut créer une clef SSH et la mettre sur Azure. Sur linux, la commande est : `ssh-keygen -t rsa -f ./cloud.pem -C [NomDuCompteGoogle]`. Le fichier utilisé pour stocker la clef privée est : `cloud.pem` et doit être présent dans le répertoire `/gce`. Il est nécessaire de renseigner la clef publique liée a cette clef privée sur votre compte Google.
 Plus de détail ici : [Google Cloud Engine gestion clef ssh](https://console.cloud.google.com/compute/metadata/sshKeys)
 Sans ceci, les scripts de configuration des machines ne seront pas déployé.
 
-
+5. Il reste à vous connecter grâce à la commande `gcloud auth application-default login` afin de vous donner l'accès a la SDK.
 
 ### 3.2 Utilisation
 
