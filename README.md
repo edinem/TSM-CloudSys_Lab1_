@@ -35,8 +35,8 @@ sudo pip install -r requirements.txt
 2. De plus, il faut _impérativement_ changer le `subscription_id` avec votre valeur obtenue lors de l'authentification avec Azure CLI.
 Plus de détail ici : [Setup Azure environment](https://docs.microsoft.com/en-us/azure/developer/python/configure-local-development-environment?tabs=cmd)
 
-3. Afin de pouvoir se connecter en SSH au VM, il faut créer une clef SSH et la mettre sur Azure. Sur linux, la commande est : `ssh-keygen -t rsa -C azureuser`. Le fichier utilisé pour stocker la clef privée est : `azurelab.pem` et doit être présent dans le répertoire `/azure`
-Sans ceci, les scripts de configuration des machines ne seront pas déployé.
+3. Afin de pouvoir se connecter en SSH au VM, il faut créer une clef SSH et la mettre sur Azure [Azure SSH Key](https://portal.azure.com/?Microsoft_Azure_Education_correlationId=65baec2c0a014f67b0dcccc69a0c2fb3&Microsoft_Azure_Education_newA4E=true&Microsoft_Azure_Education_asoSubGuid=86b1617d-af52-4f9c-b0ac-45b461d2281c#blade/HubsExtension/BrowseResource/resourceType/Microsoft.Compute%2FsshPublicKeys). Sur linux, la commande est : `ssh-keygen -t rsa -C azureuser`. Le fichier utilisé pour stocker la clef privée est : `azurelab.pem` et doit être présent dans le répertoire `/azure`
+Sans ceci, les scripts de configuration des machines ne seront pas déployé. 
 
 ### 2.2 Utilisation
 
