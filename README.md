@@ -26,18 +26,15 @@ Afin de lancer le script, il faut :
 ## 2. Azure
 ### 2.1 Requirements
 
-1. 
-Il existe un fichier requirements.txt qu'il faut installer :
+1. Il existe un fichier requirements.txt qu'il faut installer :
 ```
 sudo pip install -r requirements.txt
 ```
 
-2. 
-De plus, il faut _impérativement_ changer le `subscription_id` avec votre valeur obtenue lors de l'authentification avec Azure CLI.
+2. De plus, il faut _impérativement_ changer le `subscription_id` avec votre valeur obtenue lors de l'authentification avec Azure CLI.
 Plus de détail ici : [Setup Azure environment](https://docs.microsoft.com/en-us/azure/developer/python/configure-local-development-environment?tabs=cmd)
 
-3. 
-Afin de pouvoir se connecter en SSH au VM, il faut créer une clef SSH et la mettre sur Azure. Sur linux, la commande est : `ssh-keygen -t rsa -C azureuser`. Le fichier utilisé pour stocker la clef privée est : `azurelab.pem`
+3. Afin de pouvoir se connecter en SSH au VM, il faut créer une clef SSH et la mettre sur Azure. Sur linux, la commande est : `ssh-keygen -t rsa -C azureuser`. Le fichier utilisé pour stocker la clef privée est : `azurelab.pem` et doit être présent dans le répertoire `/azure`
 Sans ceci, les scripts de configuration des machines ne seront pas déployé.
 
 ### 2.2 Utilisation
