@@ -14,7 +14,7 @@ mysql_user_name='cloud_user'
 mysql_user_password='#Welcome123'
 mysql_root_password='#Welcome123'
 mysql_app_database='cloudapp'
-demo_app_mysql_server="104.40.186.69"
+demo_app_mysql_server="40.115.1.28"
 
 hostname='Cloud App'
 
@@ -25,6 +25,9 @@ sudo /usr/bin/sed -i "s@DBServer@$demo_app_mysql_server@" /var/www/html/config.p
 sudo /usr/bin/sed -i "s@HOSTNAME@$hostname@" /var/www/html/index.php
 sudo /usr/bin/wget -O /tmp/employees.sql https://raw.githubusercontent.com/sammcgeown/vRA-3-Tier-Application/master/app/employees.sql
 sudo /usr/bin/mysql -u "$mysql_user_name" -p"$mysql_root_password" cloudapp -h $demo_app_mysql_server < /tmp/employees.sql
+
+sudo setsebool -P httpd_can_network_connect on
+
 # Configure and start Apache
 sudo /usr/bin/sed -i "/^&lt;Directory \"\/var\/www\/html\"&gt;/,/^&lt;\/Directory&gt;/{s/AllowOverride None/AllowOverride All/g}" /etc/httpd/conf/httpd.conf
 sudo /usr/bin/sed -i "s@Listen 80@Listen 8080@" /etc/httpd/conf/httpd.conf

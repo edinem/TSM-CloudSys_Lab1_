@@ -6,9 +6,9 @@ sudo yum install epel-release -y
 sudo yum install nginx -y
 # Download the reverse proxy configuration
 sudo /usr/bin/wget -O /etc/nginx/conf.d/proxy.conf https://raw.githubusercontent.com/sammcgeown/vRA-3-Tier-Application/master/config/proxy.nginx.conf
-web_server_name="23.100.13.79"
+web_server_name="13.95.87.151"
 
-app_server_name="104.45.3.209"
+app_server_name="40.113.104.160"
 
 sudo /usr/bin/sed -i "s@SERVERNAME@$web_server_name@" /etc/nginx/conf.d/proxy.conf
 sudo /usr/bin/sed -i "s@APPTIER@$app_server_name@" /etc/nginx/conf.d/proxy.conf
@@ -22,3 +22,4 @@ sudo /usr/bin/openssl req -x509 -nodes -days 1825 -newkey rsa:2048 -keyout /etc/
 # Start and enable nginx
 sudo /usr/bin/systemctl start nginx
 sudo /usr/bin/systemctl enable nginx
+sudo setsebool -P httpd_can_network_connect on

@@ -389,7 +389,7 @@ def main():
     configureBackendInstance()
     configureFrontendInstance()
 
-    print("Setting up the server has finished... you can access it via : http://"+INSTANCE_IPS[2])
+    print("Setting up the server has finished... you can access it via : https://"+INSTANCE_IPS[2])
 
 
 if __name__ == "__main__" :
