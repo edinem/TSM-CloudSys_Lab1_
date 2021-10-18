@@ -51,10 +51,12 @@ Le script se lance et après environ 6-7 minutes tout devrait fonctionner et vou
 sudo pip install -r requirements.txt
 ```
 
-2. De plus, il faut _impérativement_ changer la variable `project_id` avec l'ID de votre projet Google Cloud Engine disponible sur votre tableau de bord.
+2. Depuis le Google Cloud Engine bashboard il est nécessaire de créer un projet afin de se voir attribué un Id de projet.
 Plus de détail ici : [Google Cloud Engine bashboard](https://console.cloud.google.com/home/dashboard)
 
-3. Afin de pouvoir se connecter en SSH au VM, il faut créer une clef SSH et la mettre sur Azure. Sur linux, la commande est : `ssh-keygen -t rsa -f ./cloud.pem -C [NomDuCompteGoogle]`. Le fichier utilisé pour stocker la clef privée est : `cloud.pem` et doit être présent dans le répertoire `/gce`. Il est nécessaire de renseigner la clef publique liée a cette clef privée sur votre compte Google.
+3. De plus, il faut _impérativement_ changer la variable `project_id` avec l'ID de votre projet Google Cloud Engine disponible sur votre tableau de bord. Cette variable est diaponible dans le `main` du script `gce_script.py`
+
+4. Afin de pouvoir se connecter en SSH au VM, il faut créer une clef SSH et la mettre sur Azure. Sur linux, la commande est : `ssh-keygen -t rsa -f ./cloud.pem -C [NomDuCompteGoogle]`. Le fichier utilisé pour stocker la clef privée est : `cloud.pem` et doit être présent dans le répertoire `/gce`. Il est nécessaire de renseigner la clef publique liée a cette clef privée sur votre compte Google.
 Plus de détail ici : [Google Cloud Engine gestion clef ssh](https://console.cloud.google.com/compute/metadata/sshKeys)
 Sans ceci, les scripts de configuration des machines ne seront pas déployé.
 
