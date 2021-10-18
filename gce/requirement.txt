@@ -1,0 +1,2 @@
+paramiko
+google-api-python-client
