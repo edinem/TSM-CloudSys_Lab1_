@@ -21,3 +21,28 @@ Afin de lancer le script, il faut :
 - Remplacer la clé `cloud.pem` par la votre tout en gardant le même nom.
 - Lancer le script python `python3 aws_setup.py`
 - Le script se lance. Il prend environ 5 minutes à s'exécuter.
+
+
+## 2. Azure
+### 2.1 Requirements
+
+1. 
+Il existe un fichier requirements.txt qu'il faut installer :
+```
+sudo pip install -r requirements.txt
+```
+
+2. 
+De plus, il faut _impérativement_ changer le `subscription_id` avec votre valeur obtenue lors de l'authentification avec Azure CLI.
+Plus de détail ici : [Setup Azure environment](https://docs.microsoft.com/en-us/azure/developer/python/configure-local-development-environment?tabs=cmd)
+
+3. 
+Afin de pouvoir se connecter en SSH au VM, il faut créer une clef SSH et la mettre sur Azure. Sur linux, la commande est : `ssh-keygen -t rsa -C azureuser`. Le fichier utilisé pour stocker la clef privée est : `azurelab.pem`
+Sans ceci, les scripts de configuration des machines ne seront pas déployé.
+
+### 2.2 Utilisation
+
+Dans le dossier d'azure :
+`python3 azure_setup.py`
+Le script se lance et après environ 6-7 minutes tout devrait fonctionner et vous pourrez vous connectez à l'API avec l'IP écrite à la fin du script.
+
