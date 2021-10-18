@@ -10,8 +10,10 @@ from azure.identity import AzureCliCredential
 from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.network import NetworkManagementClient
 from azure.mgmt.compute import ComputeManagementClient
+from azure.mgmt.network.v2017_03_01.models import NetworkSecurityGroup
+from azure.mgmt.network.v2017_03_01.models import SecurityRule
+import azure.mgmt.network.models
 import os, time, paramiko
-
 
 VNET_NAME = "labo1-vnet"
 SUBNET_NAME = "labo1-subnet"
@@ -21,6 +23,7 @@ NIC_NAME = ["labo1-nic-db", "labo1-nic-back", "labo1-nic-front"]
 RESOURCE_GROUP_NAME = "labo1"
 LOCATION = "westeurope"
 INSTANCE_IPS = []
+NSG = "labo1-network-security-group"
 # Acquire a credential object using CLI-based authentication.
 credential = AzureCliCredential()
 
@@ -75,12 +78,86 @@ def createNetworkSubnet():
 
     
 def createSecurityGroup():
+    global NSG_ID
+
     print("Defining security group")
+    network_client = NetworkManagementClient(credential, subscription_id)
+    params_create = azure.mgmt.network.models.NetworkSecurityGroup(
+        location=LOCATION,
+        security_rules=[
+            azure.mgmt.network.models.SecurityRule(
+                name='ssh rule',
+                access=azure.mgmt.network.models.SecurityRuleAccess.allow,
+                description='allow ssh security rule',
+                destination_address_prefix='*',
+                destination_port_range='22',
+                direction=azure.mgmt.network.models.SecurityRuleDirection.inbound,
+                priority=501,
+                protocol=azure.mgmt.network.models.SecurityRuleProtocol.tcp,
+                source_address_prefix='*',
+                source_port_range='*',
+            ),
+            azure.mgmt.network.models.SecurityRule(
+                name='http rule',
+                access=azure.mgmt.network.models.SecurityRuleAccess.allow,
+                description='allow http security rule',
+                destination_address_prefix='*',
+                destination_port_range='80',
+                direction=azure.mgmt.network.models.SecurityRuleDirection.inbound,
+                priority=502,
+                protocol=azure.mgmt.network.models.SecurityRuleProtocol.tcp,
+                source_address_prefix='*',
+                source_port_range='*',
+            ),
+            azure.mgmt.network.models.SecurityRule(
+                name='http2 rule',
+                access=azure.mgmt.network.models.SecurityRuleAccess.allow,
+                description='allow http2 security rule',
+                destination_address_prefix='*',
+                destination_port_range='8080',
+                direction=azure.mgmt.network.models.SecurityRuleDirection.inbound,
+                priority=503,
+                protocol=azure.mgmt.network.models.SecurityRuleProtocol.tcp,
+                source_address_prefix='*',
+                source_port_range='*',
+            ),
+            azure.mgmt.network.models.SecurityRule(
+                name='mariaDB rule',
+                access=azure.mgmt.network.models.SecurityRuleAccess.allow,
+                description='allow mariaDB security rule',
+                destination_address_prefix='*',
+                destination_port_range='3306',
+                direction=azure.mgmt.network.models.SecurityRuleDirection.inbound,
+                priority=504,
+                protocol=azure.mgmt.network.models.SecurityRuleProtocol.tcp,
+                source_address_prefix='*',
+                source_port_range='*',
+            ),
+            azure.mgmt.network.models.SecurityRule(
+                name='https rule',
+                access=azure.mgmt.network.models.SecurityRuleAccess.allow,
+                description='allow https security rule',
+                destination_address_prefix='*',
+                destination_port_range='443',
+                direction=azure.mgmt.network.models.SecurityRuleDirection.inbound,
+                priority=505,
+                protocol=azure.mgmt.network.models.SecurityRuleProtocol.tcp,
+                source_address_prefix='*',
+                source_port_range='*',
+            )
+        ],
+    )
+    result_create = network_client.network_security_groups.begin_create_or_update(
+        RESOURCE_GROUP_NAME,
+        NSG,
+        params_create,
+    )
+    #print(result_create.result())
+    NSG_ID = result_create.result().id
     
 
-
-
 def createVM(VMName, network_client, NIC, IPName) :
+    global NSG_ID
     print(f"Provisioning a virtual machine...some operations might take a minute or two.")
 
     # Step 3: Provision the subnet and wait for completion
@@ -88,6 +165,7 @@ def createVM(VMName, network_client, NIC, IPName) :
     subnet_result = poller
     
     # Step 4: Provision an IP address and wait for completion
+
     poller = network_client.public_ip_addresses.begin_create_or_update(RESOURCE_GROUP_NAME,
         IPName,
         {
@@ -114,7 +192,7 @@ def createVM(VMName, network_client, NIC, IPName) :
                 "public_ip_address": {"id": ip_address_result.id }
             }],
             'network_security_group':{
-                'id' : 'securegroup1'
+                'id' : NSG_ID
             }
         }
     )
@@ -176,21 +254,26 @@ def createVM(VMName, network_client, NIC, IPName) :
 
     print(f"Provisioned virtual machine {vm_result.name}")
 
+
 def createFrontendInstance(network_client):
     print("\nConfiguring Front\n")
     createVM("Front", network_client, NIC_NAME[2], IP_NAME[2])
+
 
 def createDatabaseInstance(network_client):
     print("\nConfiguring Database\n")
 
     createVM("Database", network_client, NIC_NAME[0], IP_NAME[0])
 
+
 def createBackendInstance(network_client):
     print("\nConfiguring Backend\n")
 
     createVM("Back", network_client, NIC_NAME[1], IP_NAME[1])
 
+
 def generateConfigScripts():
+    # IP_NAME = ["labo1-ip-db", "labo1-ip-back", "labo1-ip-front"]
 
     print("Generating Database config script...")
     db_config_template = open('./config_files/db/script_template.sh', 'rt')
@@ -205,7 +288,7 @@ def generateConfigScripts():
     backend_config_template = open('./config_files/backend/script_template.sh', 'rt')
     backend_config_output = open('./config_files/backend/script.sh', 'wt')
     for line in backend_config_template:
-        backend_config_output.write(line.replace('demo_app_mysql_server=""','demo_app_mysql_server="'+INSTANCE_IPS[1]+'"\n' ))
+        backend_config_output.write(line.replace('demo_app_mysql_server=""','demo_app_mysql_server="'+INSTANCE_IPS[0]+'"\n' ))
 
     backend_config_output.close()
     backend_config_template.close()
@@ -240,6 +323,7 @@ def configureDatabaseInstance():
     print(stdout.read())
     ssh_client.close()
 
+
 def configureBackendInstance():
 
     print("Connecting to Backend instance..")
@@ -254,6 +338,7 @@ def configureBackendInstance():
     stdin, stdout, stderr = ssh_client.exec_command('bash script.sh')
     print(stdout.read())
     ssh_client.close()
+
 
 def configureFrontendInstance():
 
@@ -272,6 +357,7 @@ def configureFrontendInstance():
 
 
 def main():
+
     global key
     global VNET_NAME 
     global SUBNET_NAME 
@@ -280,14 +366,15 @@ def main():
     global NIC_NAME
     global RESOURCE_GROUP_NAME
     global LOCATION
-
+    global NSG
+    global NSG_ID
     global INSTANCE_IPS
 
     network_client = NetworkManagementClient(credential, subscription_id)
     key = paramiko.RSAKey.from_private_key_file("./azurelab.pem")
 
     createNetworkSubnet()
-
+    createSecurityGroup()
     createDatabaseInstance(network_client)
     createBackendInstance(network_client)
     createFrontendInstance(network_client)
@@ -302,7 +389,8 @@ def main():
     configureBackendInstance()
     configureFrontendInstance()
 
-    print("Setting up the server has finished... you can access it via : https://"+INSTANCE_IPS[2])
+    print("Setting up the server has finished... you can access it via : http://"+INSTANCE_IPS[2])
+
 
 if __name__ == "__main__" :
     main()

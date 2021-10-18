@@ -2,6 +2,7 @@
 # Add epel-release
 sudo amazon-linux-extras install epel -y
 # Install nginx
+sudo yum install epel-release -y
 sudo yum install nginx -y
 # Download the reverse proxy configuration
 sudo /usr/bin/wget -O /etc/nginx/conf.d/proxy.conf https://raw.githubusercontent.com/sammcgeown/vRA-3-Tier-Application/master/config/proxy.nginx.conf
@@ -19,3 +20,4 @@ sudo /usr/bin/openssl req -x509 -nodes -days 1825 -newkey rsa:2048 -keyout /etc/
 # Start and enable nginx
 sudo /usr/bin/systemctl start nginx
 sudo /usr/bin/systemctl enable nginx
+sudo setsebool -P httpd_can_network_connect on

@@ -14,7 +14,7 @@ mysql_user_name='cloud_user'
 mysql_user_password='#Welcome123'
 mysql_root_password='#Welcome123'
 mysql_app_database='cloudapp'
-demo_app_mysql_server="13.93.104.255"
+demo_app_mysql_server="104.40.186.69"
 
 hostname='Cloud App'
 
