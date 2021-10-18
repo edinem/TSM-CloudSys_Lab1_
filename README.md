@@ -26,8 +26,9 @@ Afin de lancer le script, il faut :
 ## 2. Azure
 ### 2.1 Requirements
 
-1. Il existe un fichier requirements.txt qu'il faut installer :
+1. Il y a plusieurs requirement à installer :
 ```
+sudo apt install azure-cli
 sudo pip install -r requirements.txt
 ```
 
