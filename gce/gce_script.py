@@ -172,7 +172,7 @@ def createFrontendInstance():
         "sourceRanges": ['0.0.0.0/0']
     }
     request = compute.firewalls().insert(project=project_id, body=firewall_body).execute()
-    
+
 def generateFrontendScript():
     instances = list_instances()
     for instance in instances:
@@ -201,7 +201,7 @@ def configureFrontendInstance():
     print("Connecting to Frontend instance..")
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh_client.connect(hostname=frontend_ip, username =username, pkey=key)
+    ssh_client.connect(hostname=frontend_ip, username =USERNAME, pkey=key)
     print("Uploading to Frontend instance..")
     ftp_client = ssh_client.open_sftp()
     ftp_client.put('./config_files/frontend/script.sh', 'script.sh')
@@ -215,8 +215,8 @@ def configureFrontendInstance():
 def main():
     global project_id
     project_id = 'the-bird-326707'
-    global username
-    username = 'vtruanheig'
+    global USERNAME
+    USERNAME = 'vtruanheig'
     global zone
     zone = 'us-central1-f'
     global compute
