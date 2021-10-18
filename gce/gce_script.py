@@ -171,8 +171,8 @@ def createFrontendInstance():
             }],
         "sourceRanges": ['0.0.0.0/0']
     }
-    request = compute.firewalls().insert(project=project_id, body=firewall_body)
-
+    request = compute.firewalls().insert(project=project_id, body=firewall_body).execute()
+    
 def generateFrontendScript():
     instances = list_instances()
     for instance in instances:
